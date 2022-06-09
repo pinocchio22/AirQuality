@@ -1,9 +1,7 @@
 package com.example.airquality
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
@@ -14,12 +12,17 @@ import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.airquality.databinding.ActivityMainBinding
+import com.example.airquality.retrofit.AirQualityResponse
+import com.example.airquality.retrofit.AirQualityService
+import com.example.airquality.retrofit.RetrofitConnection
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.io.IOException
 import java.util.*
 
@@ -56,10 +59,35 @@ class MainActivity : AppCompatActivity() {
                 binding.tvLocationTitle.text = it.thoroughfare
                 binding.tvLocationSubtitle.text = "${it.countryName} ${it.adminArea}"
             }
+            getAirQualityData(latitude, longitude)
             // 2. 현재 미세먼지 농도를 가져오고 UI 업데이트
         } else {
             Toast.makeText(this@MainActivity, "위도, 경도 정보를 가져올 수 없었습니다. 새로고침을 눌러주세요.", Toast.LENGTH_LONG).show()
         }
+    }
+
+    private fun getAirQualityData(latitude: Double, longitude: Double) {
+        val retrofitAPI = RetrofitConnection.getInstance().create(AirQualityService::class.java)
+
+        retrofitAPI.getAirQualityData(latitude.toString(), longitude.toString(), "5e42faae-d8c8-4db0-b4a6-46f20a4899f5").enqueue(object : Callback<AirQualityResponse> {
+            override fun onResponse(
+                call : Call<AirQualityResponse>, response: Response<AirQualityResponse>
+            ) {
+                // 정삭적인 response 가 왔다면 UI 업데이트
+                if (response.isSuccessful) {
+                    Toast.makeText(this@MainActivity, "최신 정보 업데이트 완료.", Toast.LENGTH_SHORT).show()
+                    // response.body()가 null 이 아니면 updateAirUI()
+                    response.body()?.let { updateAirUI(it) }
+                } else {
+                    Toast.makeText(this@MainActivity, "업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<AirQualityResponse>, t: Throwable) {
+                t.printStackTrace()
+                Toast.makeText(this@MainActivity, "업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     fun getCurrentAddress(latitude : Double, longitude : Double) : Address? {
