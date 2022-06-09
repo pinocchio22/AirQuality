@@ -51,7 +51,7 @@ class LocationProvider(val context : Context) {
                         return gpsLocation
                     } else {
                         location = networkLocation
-                        return gpsLocation
+                        return networkLocation
                     }
                 } else {
                     // 가능한 위치 정보가 한개인 경우

@@ -1,10 +1,13 @@
 package com.example.airquality
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,6 +20,8 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.airquality.databinding.ActivityMainBinding
+import java.io.IOException
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -46,10 +51,38 @@ class MainActivity : AppCompatActivity() {
 
         if (latitude != 0.0 || longitude != 0.0) {
             // 1. 현재 위치를 가져오고 UI 업데이트
+            val address = getCurrentAddress(latitude, longitude)
+            address?.let {
+                binding.tvLocationTitle.text = it.thoroughfare
+                binding.tvLocationSubtitle.text = "${it.countryName} ${it.adminArea}"
+            }
             // 2. 현재 미세먼지 농도를 가져오고 UI 업데이트
         } else {
             Toast.makeText(this@MainActivity, "위도, 경도 정보를 가져올 수 없었습니다. 새로고침을 눌러주세요.", Toast.LENGTH_LONG).show()
         }
+    }
+
+    fun getCurrentAddress(latitude : Double, longitude : Double) : Address? {
+        val geocoder = Geocoder(this, Locale.getDefault())
+        // Address 객체는 주소와 관련된 여러 정보를 가지고 있습니다.
+        // android.location.Address 패키지 참고.
+        val addresses : List<Address>?
+
+        addresses = try {
+            // Geocoder 객체를 이용하여 위도와 경도로부터 리스트를 가져옵니다.
+            geocoder.getFromLocation(latitude, longitude, 7)
+        } catch (ioException : IOException) {
+            Toast.makeText(this, "지오코더 서비스 사용불가합니다.", Toast.LENGTH_LONG).show()
+            return null
+        }
+
+        // 에러는 아니지만 주소가 발견되지 않은 경우
+        if (addresses == null || addresses.size == 0) {
+            Toast.makeText(this, "주소가 발견되지 않았습니다.", Toast.LENGTH_LONG).show()
+            return null
+        }
+        val address : Address = addresses[0]
+        return address
     }
 
     private fun checkAllPermissions() {
@@ -88,7 +121,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             if (checkResult) {
-                // 위치값을 가져올 수 있음
+                updateUI()
             } else {
                 Toast.makeText(this@MainActivity, "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요", Toast.LENGTH_LONG).show()
                 finish()
