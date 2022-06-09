@@ -49,6 +49,12 @@ class MainActivity : AppCompatActivity() {
         setRefreshButton()
     }
 
+    private fun setRefreshButton() {
+        binding.btnRefresh.setOnClickListener {
+            updateUI()
+        }
+    }
+
     private fun updateUI() {
         locationProvider = LocationProvider(this@MainActivity)
 
