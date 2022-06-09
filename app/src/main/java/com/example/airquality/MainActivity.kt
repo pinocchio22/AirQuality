@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
     var REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 
     lateinit var getGPSPermissionLauncher : ActivityResultLauncher<Intent>
+    lateinit var locationProvider : LocationProvider
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,6 +34,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         checkAllPermissions()
+        updateUI()
+    }
+
+    private fun updateUI() {
+        locationProvider = LocationProvider(this@MainActivity)
+
+        //위도와 경도 정보를 가져옴
+        val latitude : Double = locationProvider.getLocationLatitude()
+        val longitude : Double = locationProvider.getLocationLongitude()
+
+        if (latitude != 0.0 || longitude != 0.0) {
+            // 1. 현재 위치를 가져오고 UI 업데이트
+            // 2. 현재 미세먼지 농도를 가져오고 UI 업데이트
+        } else {
+            Toast.makeText(this@MainActivity, "위도, 경도 정보를 가져올 수 없었습니다. 새로고침을 눌러주세요.", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun checkAllPermissions() {
