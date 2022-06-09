@@ -95,15 +95,15 @@ class MainActivity : AppCompatActivity() {
         builder.setTitle("위치 서비스 비활성화")
         builder.setMessage("위치 서비스가 꺼져 있습니다. 설정해야 앱을 사용할 수 있습니다.")
         builder.setCancelable(true)
-        builder.setPositiveButton("설정", DialogInterface.OnClickListener { dialog, id ->
+        builder.setPositiveButton("설정") { _, _ ->
             val callGPSSettingIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
             getGPSPermissionLauncher.launch(callGPSSettingIntent)
-        })
-        builder.setNegativeButton("취소", DialogInterface.OnClickListener { dialog, id ->
+        }
+        builder.setNegativeButton("취소") { dialog, _ ->
             dialog.cancel()
             Toast.makeText(this@MainActivity, "기기에서 위치서비스 설정 후 사용해주세요.", Toast.LENGTH_SHORT).show()
             finish()
-        })
+        }
         builder.create().show()
     }
 }
