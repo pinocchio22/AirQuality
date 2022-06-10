@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -39,6 +41,19 @@ class MainActivity : AppCompatActivity() {
     lateinit var getGPSPermissionLauncher : ActivityResultLauncher<Intent>
     lateinit var locationProvider : LocationProvider
 
+    var latitude = 0.0
+    var longitude = 0.0
+
+    val startMapActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult(), object  : ActivityResultCallback<ActivityResult> {
+        override fun onActivityResult(result: ActivityResult?) {
+            if (result?.resultCode ?: 0 == Activity.RESULT_OK) {
+                latitude = result?.data?.getDoubleExtra("latitude", 0.0) ?: 0.0
+                longitude = result?.data?.getDoubleExtra("longitude", 0.0) ?: 0.0
+                updateUI()
+            }
+        }
+    })
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -47,6 +62,17 @@ class MainActivity : AppCompatActivity() {
         checkAllPermissions()
         updateUI()
         setRefreshButton()
+
+        setFab()
+    }
+
+    private fun setFab() {
+        binding.fab.setOnClickListener {
+            val intent = Intent(this, MapActivity::class.java)
+            intent.putExtra("currentLat", latitude)
+            intent.putExtra("currentLng", longitude)
+            startMapActivityResult.launch(intent)
+        }
     }
 
     private fun setRefreshButton() {
@@ -59,8 +85,10 @@ class MainActivity : AppCompatActivity() {
         locationProvider = LocationProvider(this@MainActivity)
 
         //위도와 경도 정보를 가져옴
-        val latitude : Double = locationProvider.getLocationLatitude()
-        val longitude : Double = locationProvider.getLocationLongitude()
+        if (latitude == 0.0 || longitude == 0.0) {
+            latitude = locationProvider.getLocationLatitude()
+            longitude = locationProvider.getLocationLongitude()
+        }
 
         if (latitude != 0.0 || longitude != 0.0) {
             // 1. 현재 위치를 가져오고 UI 업데이트
