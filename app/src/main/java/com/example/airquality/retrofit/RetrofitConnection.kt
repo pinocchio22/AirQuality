@@ -13,7 +13,7 @@ class RetrofitConnection {
 
     //singleton pattern
     companion object {
-        private const val BASE_URL = "https://api.airvisual.com/v2"
+        private const val BASE_URL = "https://api.airvisual.com/v2/"
         private var INSTANCE : Retrofit?= null
 
         fun getInstance() : Retrofit {
