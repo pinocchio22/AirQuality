@@ -1,6 +1,7 @@
 package com.example.airquality
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -44,15 +45,14 @@ class MainActivity : AppCompatActivity() {
     var latitude = 0.0
     var longitude = 0.0
 
-    val startMapActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult(), object  : ActivityResultCallback<ActivityResult> {
-        override fun onActivityResult(result: ActivityResult?) {
-            if (result?.resultCode ?: 0 == Activity.RESULT_OK) {
-                latitude = result?.data?.getDoubleExtra("latitude", 0.0) ?: 0.0
-                longitude = result?.data?.getDoubleExtra("longitude", 0.0) ?: 0.0
-                updateUI()
-            }
+    val startMapActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if ((result?.resultCode ?: 0) == Activity.RESULT_OK) {
+            latitude = result?.data?.getDoubleExtra("latitude", 0.0) ?: 0.0
+            longitude = result?.data?.getDoubleExtra("longitude", 0.0) ?: 0.0
+            updateUI()
         }
-    })
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,6 +81,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SetTextI18n")
     private fun updateUI() {
         locationProvider = LocationProvider(this@MainActivity)
 
@@ -160,13 +161,15 @@ class MainActivity : AppCompatActivity() {
         val geocoder = Geocoder(this, Locale.getDefault())
         // Address 객체는 주소와 관련된 여러 정보를 가지고 있습니다.
         // android.location.Address 패키지 참고.
-        val addresses : List<Address>?
 
-        addresses = try {
+        val addresses : List<Address>? = try {
             // Geocoder 객체를 이용하여 위도와 경도로부터 리스트를 가져옵니다.
             geocoder.getFromLocation(latitude, longitude, 7)
         } catch (ioException : IOException) {
             Toast.makeText(this, "지오코더 서비스 사용불가합니다.", Toast.LENGTH_LONG).show()
+            return null
+        } catch (illegalArgumentException: IllegalArgumentException) {
+            Toast.makeText(this, "잘못된 위도, 경도 입니다.", Toast.LENGTH_LONG).show()
             return null
         }
 
