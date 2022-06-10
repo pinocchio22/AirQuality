@@ -1,5 +1,7 @@
 package com.example.airquality
 
+import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.airquality.databinding.ActivityMapBinding
@@ -28,6 +30,16 @@ class MapActivity : AppCompatActivity(), OnMapReadyCallback {
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        binding.btnCheckHere.setOnClickListener {
+            mMap?.let {
+                val intent = Intent()
+                intent.putExtra("latitude", it.cameraPosition.target.latitude)
+                intent.putExtra("longitude", it.cameraPosition.target.longitude)
+                setResult(Activity.RESULT_OK, intent)
+                finish()
+            }
+        }
     }
 
     override fun onMapReady(googleMap : GoogleMap) {
