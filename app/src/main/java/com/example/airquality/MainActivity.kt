@@ -11,6 +11,7 @@ import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultCallback
@@ -23,6 +24,10 @@ import com.example.airquality.databinding.ActivityMainBinding
 import com.example.airquality.retrofit.AirQualityResponse
 import com.example.airquality.retrofit.AirQualityService
 import com.example.airquality.retrofit.RetrofitConnection
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.MobileAds
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -62,8 +67,9 @@ class MainActivity : AppCompatActivity() {
         checkAllPermissions()
         updateUI()
         setRefreshButton()
-
         setFab()
+
+        setBannerAds()
     }
 
     private fun setFab() {
@@ -252,5 +258,34 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
         builder.create().show()
+    }
+
+    private fun setBannerAds() {
+        // 광고 SDK 초기화
+        MobileAds.initialize(this)
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
+
+        binding.adView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                Log.d("ads log", "배너 광고가 로드 되었습니다.")
+            }
+
+            override fun onAdFailedToLoad(adError: LoadAdError) {
+                Log.d("ads log", "배너 광고가 로드 실패했습니다." + adError.responseInfo)
+            }
+
+            override fun onAdOpened() {
+                Log.d("ads log", "배너 광고를 열었습니다.")
+            }
+
+            override fun onAdClicked() {
+                Log.d("ads log", "배너 광고가 클릭되었습니다.")
+            }
+
+            override fun onAdClosed() {
+                Log.d("ads log", "배너 광고가 종료되었습니다.")
+            }
+        }
     }
 }
