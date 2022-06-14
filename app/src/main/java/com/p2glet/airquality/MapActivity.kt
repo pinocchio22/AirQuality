@@ -1,10 +1,10 @@
-package com.example.airquality
+package com.p2glet.airquality
 
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.airquality.databinding.ActivityMapBinding
+import com.p2glet.airquality.databinding.ActivityMapBinding
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback

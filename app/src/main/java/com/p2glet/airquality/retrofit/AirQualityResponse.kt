@@ -1,4 +1,4 @@
-package com.example.airquality.retrofit
+package com.p2glet.airquality.retrofit
 
 data class AirQualityResponse(
     val `data`: Data,

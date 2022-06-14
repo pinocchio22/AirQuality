@@ -1,4 +1,4 @@
-package com.example.airquality.retrofit
+package com.p2glet.airquality.retrofit
 
 import retrofit2.Call
 import retrofit2.http.GET

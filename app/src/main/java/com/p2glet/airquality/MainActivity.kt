@@ -1,4 +1,4 @@
-package com.example.airquality
+package com.p2glet.airquality
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -13,17 +13,15 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.airquality.databinding.ActivityMainBinding
-import com.example.airquality.retrofit.AirQualityResponse
-import com.example.airquality.retrofit.AirQualityService
-import com.example.airquality.retrofit.RetrofitConnection
+import com.p2glet.airquality.databinding.ActivityMainBinding
+import com.p2glet.airquality.retrofit.AirQualityResponse
+import com.p2glet.airquality.retrofit.AirQualityService
+import com.p2glet.airquality.retrofit.RetrofitConnection
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError

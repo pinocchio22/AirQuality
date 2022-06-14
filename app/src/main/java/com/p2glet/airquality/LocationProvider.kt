@@ -1,4 +1,4 @@
-package com.example.airquality
+package com.p2glet.airquality
 
 import android.Manifest
 import android.content.Context

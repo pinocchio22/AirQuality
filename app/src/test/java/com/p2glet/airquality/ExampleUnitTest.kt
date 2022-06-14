@@ -1,4 +1,4 @@
-package com.example.airquality
+package com.p2glet.airquality
 
 import org.junit.Test
 
