@@ -20,10 +20,10 @@
         <activity
             android:name="com.p2glet.airquality.MapActivity"
             android:exported="false" />
-
+z
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAzcj9gTzq-JkupcCw-P3wULXyRzLgWaG8" />
+            android:value="AIzaSyBcgJ8ac8aECPJ0mVOpnJHQmdb7occqyKU" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-3610848843940754~9338539988" />
