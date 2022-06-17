@@ -20,7 +20,7 @@
         <activity
             android:name="com.p2glet.airquality.MapActivity"
             android:exported="false" />
-z
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBcgJ8ac8aECPJ0mVOpnJHQmdb7occqyKU" />
