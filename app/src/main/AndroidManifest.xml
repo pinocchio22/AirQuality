@@ -20,6 +20,7 @@
         <activity
             android:name="com.p2glet.airquality.MapActivity"
             android:exported="false" />
+        <activity android:name=".FavoriteActivity"/>
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"

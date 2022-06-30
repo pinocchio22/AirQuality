@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
         updateUI()
         setRefreshButton()
         setFab()
+        setFavorite()
 
         setBannerAds()
     }
@@ -133,6 +134,12 @@ class MainActivity : AppCompatActivity() {
                 mInterstitialAd = interstitialAd
             }
         })
+    }
+    private fun setFavorite() {
+        binding.favBtn.setOnClickListener {
+            val intent = Intent(this@MainActivity, FavoriteActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun setFab() {

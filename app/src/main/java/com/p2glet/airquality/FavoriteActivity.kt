@@ -29,7 +29,6 @@ class FavoriteActivity : AppCompatActivity() {
 
         binding.recyclerFavorite.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.recyclerFavorite.adapter = adapter
-
         init()
     }
 

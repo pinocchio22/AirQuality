@@ -145,6 +145,19 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/fav_btn"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="10dp"
+        android:backgroundTint="@color/orange"
+        android:src="@drawable/ic_star_clicked"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toTopOf="@id/adView"
+        app:layout_constraintEnd_toStartOf="@id/fab"
+        app:tint="@color/white"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/fab"
         android:layout_marginBottom="30dp"
         android:layout_marginEnd="23dp"
