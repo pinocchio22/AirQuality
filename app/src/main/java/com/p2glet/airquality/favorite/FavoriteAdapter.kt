@@ -26,7 +26,7 @@ class FavoriteAdapter(val itemList: ArrayList<FavoriteItem>): RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: FavoriteAdapter.ViewHolder, position: Int) {
         holder.name.text = itemList[position].name
-        holder.location.text = itemList[position].location.toString()
+        holder.location.text = itemList[position].location
 
         if (itemList[position].favorite) {
             holder.favorite.setBackgroundResource(R.drawable.ic_star_clicked)

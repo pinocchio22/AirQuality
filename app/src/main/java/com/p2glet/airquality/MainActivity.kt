@@ -13,12 +13,16 @@ import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.view.setPadding
 import com.google.android.gms.ads.*
 import com.p2glet.airquality.databinding.ActivityMainBinding
 import com.p2glet.airquality.retrofit.AirQualityResponse
@@ -26,6 +30,7 @@ import com.p2glet.airquality.retrofit.AirQualityService
 import com.p2glet.airquality.retrofit.RetrofitConnection
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.firebase.firestore.FirebaseFirestore
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,11 +46,15 @@ class MainActivity : AppCompatActivity() {
     private val PERMISSIONS_REQUEST_CODE = 100
     var REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 
+    val db = FirebaseFirestore.getInstance()
+
     lateinit var getGPSPermissionLauncher : ActivityResultLauncher<Intent>
     lateinit var locationProvider : LocationProvider
 
     var latitude = 0.0
     var longitude = 0.0
+
+    var favorite_click = false
 
     val startMapActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -68,6 +77,7 @@ class MainActivity : AppCompatActivity() {
         setRefreshButton()
         setFab()
         setFavorite()
+        FavoriteClick()
 
         setBannerAds()
     }
@@ -349,5 +359,38 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
         builder.create().show()
+    }
+
+    fun FavoriteClick() {
+        binding.addFavorite.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            val tvName = TextView(this)
+            tvName.text = "이름"
+            val etName = EditText(this)
+            etName.isSingleLine = true
+            val mLayout = LinearLayout(this)
+            mLayout.orientation = LinearLayout.VERTICAL
+            mLayout.setPadding(15)
+            mLayout.addView(tvName)
+            mLayout.addView(etName)
+            builder.setView(mLayout)
+
+            builder.setTitle("즐겨찾기로 저장하시겠습니까?")
+            builder.setPositiveButton("확인") { dialog , which ->
+                val data = hashMapOf("name" to etName.text.toString(), "location" to binding.tvLocationTitle.text, "favorite" to favorite_click, "lat" to latitude, "lng" to longitude )
+                db.collection("Favorite_Place")
+                    .add(data)
+                    .addOnSuccessListener {
+                        // 성공
+                        Toast.makeText(this, "즐겨찾기가 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.w("MainActivity", "Error getting documents: $exception")
+                    }
+            }
+            builder.setNegativeButton("취소") { dialog , which ->
+            }
+            builder.show()
+        }
     }
 }
