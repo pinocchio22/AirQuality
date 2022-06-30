@@ -3,12 +3,14 @@ package com.p2glet.airquality
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.p2glet.airquality.databinding.ActivityFavoriteBinding
 import com.p2glet.airquality.favorite.FavoriteAdapter
 import com.p2glet.airquality.favorite.FavoriteItem
+
 
 /**
  * @author CHOI
@@ -44,12 +46,15 @@ class FavoriteActivity : AppCompatActivity() {
                     itemlist.add(item)
                 }
                 adapter.notifyDataSetChanged()
-                println(itemlist)
             }
             .addOnFailureListener { exception ->
                 // 실패
                 Log.d("MainActivity", "Error getting document : $exception")
             }
+    }
+
+    fun itemclick() {
+
     }
 }
 

@@ -31,6 +31,7 @@ import com.p2glet.airquality.retrofit.RetrofitConnection
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.firebase.firestore.FirebaseFirestore
+import com.p2glet.airquality.favorite.FavoriteItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
     var latitude = 0.0
     var longitude = 0.0
 
+    var favorite_itemlist = arrayListOf<FavoriteItem>()
     var favorite_click = false
 
     val startMapActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
@@ -72,11 +74,14 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        favorite_click = intent.getBooleanExtra("bool", false)
+        println(favorite_click)
+
         checkAllPermissions()
         updateUI()
         setRefreshButton()
         setFab()
-        setFavorite()
+        addFavorite()
         FavoriteClick()
 
         setBannerAds()
@@ -146,6 +151,10 @@ class MainActivity : AppCompatActivity() {
         })
     }
     private fun setFavorite() {
+
+    }
+
+    private fun addFavorite() {
         binding.favBtn.setOnClickListener {
             val intent = Intent(this@MainActivity, FavoriteActivity::class.java)
             startActivity(intent)
