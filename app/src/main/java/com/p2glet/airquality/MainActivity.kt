@@ -36,7 +36,6 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
-
     private lateinit var binding : ActivityMainBinding
 
     private val PERMISSIONS_REQUEST_CODE = 100

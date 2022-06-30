@@ -9,6 +9,38 @@
       "client_info": {
         "mobilesdk_app_id": "1:33521507868:android:a37ca3aaec35c4dedb49d9",
         "android_client_info": {
+          "package_name": "com.example.airquality"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "33521507868-da69s5m001eis0pmmrifa84v01umoo15.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC34xH1b7cVQyOpjaUnM9u75UZig5jjMxc"
+        },
+        {
+          "current_key": "AIzaSyBcgJ8ac8aECPJ0mVOpnJHQmdb7occqyKU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "33521507868-da69s5m001eis0pmmrifa84v01umoo15.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:33521507868:android:fbf9cc9b80d27ee4db49d9",
+        "android_client_info": {
           "package_name": "com.p2glet.airquality"
         }
       },
@@ -21,6 +53,9 @@
       "api_key": [
         {
           "current_key": "AIzaSyC34xH1b7cVQyOpjaUnM9u75UZig5jjMxc"
+        },
+        {
+          "current_key": "AIzaSyBcgJ8ac8aECPJ0mVOpnJHQmdb7occqyKU"
         }
       ],
       "services": {

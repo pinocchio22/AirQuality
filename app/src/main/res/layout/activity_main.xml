@@ -58,12 +58,12 @@
         app:layout_constraintStart_toStartOf="@id/guideline1"
         app:layout_constraintTop_toBottomOf="@id/tv_location_title"/>
 
-    <ImageView
+    <Button
         android:id="@+id/favorite"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginStart="2dp"
-        android:src="@drawable/ic_star_click"
+        android:background="@drawable/ic_star_click"
         app:layout_constraintBottom_toBottomOf="@id/tv_location_title"
         app:layout_constraintStart_toEndOf="@id/tv_location_title"
         app:layout_constraintTop_toTopOf="@id/tv_location_title"/>
