@@ -209,6 +209,8 @@ class FavoriteLocation : AppCompatActivity() {
         if (latitude == 0.0 || longitude == 0.0) {
             latitude = intent.getDoubleExtra("latitude",0.0)
             longitude = intent.getDoubleExtra("longitude",0.0)
+            println("LOC" + latitude)
+            println("LOC" + longitude)
         }
 
         if (latitude != 0.0 || longitude != 0.0) {
@@ -409,9 +411,5 @@ class FavoriteLocation : AppCompatActivity() {
 //            }
 //            builder.show()
 //        }
-    }
-
-    fun setFavoriteLocation() {
-
     }
 }

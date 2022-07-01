@@ -205,6 +205,8 @@ class MainActivity : AppCompatActivity() {
         if (latitude == 0.0 || longitude == 0.0) {
             latitude = locationProvider.getLocationLatitude()
             longitude = locationProvider.getLocationLongitude()
+            println("Main" + latitude)
+            println("Main" + longitude)
         }
 
         if (latitude != 0.0 || longitude != 0.0) {

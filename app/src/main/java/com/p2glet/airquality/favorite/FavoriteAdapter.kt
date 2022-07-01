@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.p2glet.airquality.FavoriteLocation
 import com.p2glet.airquality.MainActivity
 import com.p2glet.airquality.R
 
@@ -34,8 +35,12 @@ class FavoriteAdapter(val itemList: ArrayList<FavoriteItem>): RecyclerView.Adapt
             holder.favorite.setBackgroundResource(R.drawable.ic_star_clicked)
         }
         holder.itemView.setOnClickListener {
-            var intent = Intent(it.context, MainActivity::class.java)
+            var intent = Intent(it.context, FavoriteLocation::class.java)
             intent.putExtra("bool", itemList[position].favorite)
+            intent.putExtra("latitude", itemList[position].lat)
+            intent.putExtra("longitude", itemList[position].lng)
+            println("PUT" + itemList[position].lat)
+            println("PUT" + itemList[position].lng)
             it.context.startActivity(intent)
         }
     }
