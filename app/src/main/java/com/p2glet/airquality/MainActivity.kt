@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
     var latitude = 0.0
     var longitude = 0.0
 
-    var favorite_itemlist = arrayListOf<FavoriteItem>()
     var favorite_click = false
 
     val startMapActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
@@ -80,7 +79,6 @@ class MainActivity : AppCompatActivity() {
         setFab()
         setBannerAds()
 
-        setFavorite()
         addFavorite()
         FavoriteClick()
     }
@@ -147,11 +145,6 @@ class MainActivity : AppCompatActivity() {
                 mInterstitialAd = interstitialAd
             }
         })
-    }
-    private fun setFavorite() {
-        if (favorite_click) {
-            binding.addFavorite.setBackgroundResource(R.drawable.ic_star_clicked)
-        }
     }
 
     private fun addFavorite() {
@@ -388,7 +381,7 @@ class MainActivity : AppCompatActivity() {
 
             builder.setTitle("즐겨찾기로 저장하시겠습니까?")
             builder.setPositiveButton("확인") { dialog , which ->
-                val data = hashMapOf("name" to etName.text.toString(), "location" to binding.tvLocationTitle.text as String, "favorite" to favorite_click, "lat" to latitude, "lng" to longitude )
+                val data = hashMapOf("name" to etName.text.toString(), "location" to binding.tvLocationTitle.text as String, "favorite" to true, "lat" to latitude, "lng" to longitude )
                 db.collection("Favorite_Place")
                     .add(data)
                     .addOnSuccessListener {

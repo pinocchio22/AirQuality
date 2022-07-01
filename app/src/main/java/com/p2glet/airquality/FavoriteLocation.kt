@@ -55,7 +55,6 @@ class FavoriteLocation : AppCompatActivity() {
     var latitude = 0.0
     var longitude = 0.0
 
-    var favorite_itemlist = arrayListOf<FavoriteItem>()
     var favorite_click = false
 
     val startMapActivityResult = registerForActivityResult(
