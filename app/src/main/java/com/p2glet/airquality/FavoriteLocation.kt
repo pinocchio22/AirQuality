@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -24,14 +23,15 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import com.google.android.gms.ads.*
-import com.p2glet.airquality.databinding.ActivityMainBinding
-import com.p2glet.airquality.retrofit.AirQualityResponse
-import com.p2glet.airquality.retrofit.AirQualityService
-import com.p2glet.airquality.retrofit.RetrofitConnection
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.firebase.firestore.FirebaseFirestore
+import com.p2glet.airquality.databinding.ActivityFavoriteLocationBinding
+import com.p2glet.airquality.databinding.ActivityMainBinding
 import com.p2glet.airquality.favorite.FavoriteItem
+import com.p2glet.airquality.retrofit.AirQualityResponse
+import com.p2glet.airquality.retrofit.AirQualityService
+import com.p2glet.airquality.retrofit.RetrofitConnection
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -41,8 +41,8 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class MainActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityMainBinding
+class FavoriteLocation : AppCompatActivity() {
+    private lateinit var binding : ActivityFavoriteLocationBinding
 
     private val PERMISSIONS_REQUEST_CODE = 100
     var REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -58,7 +58,8 @@ class MainActivity : AppCompatActivity() {
     var favorite_itemlist = arrayListOf<FavoriteItem>()
     var favorite_click = false
 
-    val startMapActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
+    val startMapActivityResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if ((result?.resultCode ?: 0) == Activity.RESULT_OK) {
             latitude = result?.data?.getDoubleExtra("latitude", 0.0) ?: 0.0
@@ -71,8 +72,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+        binding = ActivityFavoriteLocationBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        favorite_click = intent.getBooleanExtra("bool", false)
+
 
         checkAllPermissions()
         updateUI()
@@ -156,7 +160,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun addFavorite() {
         binding.favBtn.setOnClickListener {
-            val intent = Intent(this@MainActivity, FavoriteActivity::class.java)
+            val intent = Intent(this@FavoriteLocation, FavoriteActivity::class.java)
             startActivity(intent)
         }
     }
@@ -168,7 +172,7 @@ class MainActivity : AppCompatActivity() {
                     override fun onAdDismissedFullScreenContent() {
                         Log.d("ads log", "전면 광고가 닫혔습니다.")
 
-                        val intent = Intent(this@MainActivity, MapActivity::class.java)
+                        val intent = Intent(this@FavoriteLocation, MapActivity::class.java)
                         intent.putExtra("currentLat", latitude)
                         intent.putExtra("currentLng", longitude)
                         startMapActivityResult.launch(intent)
@@ -183,10 +187,10 @@ class MainActivity : AppCompatActivity() {
                         mInterstitialAd = null
                     }
                 }
-                mInterstitialAd!!.show(this@MainActivity)
+                mInterstitialAd!!.show(this@FavoriteLocation)
             } else {
                 Log.d("InterstitialAd", "전면 광고가 로딩되지 않았습니다.")
-                Toast.makeText(this@MainActivity, "잠시 후 다시 시도해주세요.", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@FavoriteLocation, "잠시 후 다시 시도해주세요.", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -199,12 +203,12 @@ class MainActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun updateUI() {
-        locationProvider = LocationProvider(this@MainActivity)
+        locationProvider = LocationProvider(this@FavoriteLocation)
 
         //위도와 경도 정보를 가져옴
         if (latitude == 0.0 || longitude == 0.0) {
-            latitude = locationProvider.getLocationLatitude()
-            longitude = locationProvider.getLocationLongitude()
+            latitude = intent.getDoubleExtra("latitude",0.0)
+            longitude = intent.getDoubleExtra("longitude",0.0)
         }
 
         if (latitude != 0.0 || longitude != 0.0) {
@@ -217,30 +221,31 @@ class MainActivity : AppCompatActivity() {
             getAirQualityData(latitude, longitude)
             // 2. 현재 미세먼지 농도를 가져오고 UI 업데이트
         } else {
-            Toast.makeText(this@MainActivity, "위도, 경도 정보를 가져올 수 없었습니다. 새로고침을 눌러주세요.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this@FavoriteLocation, "위도, 경도 정보를 가져올 수 없었습니다. 새로고침을 눌러주세요.", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun getAirQualityData(latitude: Double, longitude: Double) {
         val retrofitAPI = RetrofitConnection.getInstance().create(AirQualityService::class.java)
 
-        retrofitAPI.getAirQualityData(latitude.toString(), longitude.toString(), "5e42faae-d8c8-4db0-b4a6-46f20a4899f5").enqueue(object : Callback<AirQualityResponse> {
+        retrofitAPI.getAirQualityData(latitude.toString(), longitude.toString(), "5e42faae-d8c8-4db0-b4a6-46f20a4899f5").enqueue(object :
+            Callback<AirQualityResponse> {
             override fun onResponse(
                 call : Call<AirQualityResponse>, response: Response<AirQualityResponse>
             ) {
                 // 정삭적인 response 가 왔다면 UI 업데이트
                 if (response.isSuccessful) {
-                    Toast.makeText(this@MainActivity, "최신 정보 업데이트 완료.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@FavoriteLocation, "최신 정보 업데이트 완료.", Toast.LENGTH_SHORT).show()
                     // response.body()가 null 이 아니면 updateAirUI()
                     response.body()?.let { updateAirUI(it) }
                 } else {
-                    Toast.makeText(this@MainActivity, "업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@FavoriteLocation, "업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<AirQualityResponse>, t: Throwable) {
                 t.printStackTrace()
-                Toast.makeText(this@MainActivity, "업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@FavoriteLocation, "업데이트에 실패했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -308,14 +313,15 @@ class MainActivity : AppCompatActivity() {
 
     fun isLocationServicesAvailable() : Boolean {
         val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        return (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER))
+        return (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER))
     }
 
     fun isRunTimePermissionsGranted() {
-        val hasFineLocationPermission = ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.ACCESS_FINE_LOCATION)
-        val hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this@MainActivity, Manifest.permission.ACCESS_COARSE_LOCATION)
+        val hasFineLocationPermission = ContextCompat.checkSelfPermission(this@FavoriteLocation, Manifest.permission.ACCESS_FINE_LOCATION)
+        val hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this@FavoriteLocation, Manifest.permission.ACCESS_COARSE_LOCATION)
         if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED || hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this@MainActivity, REQUIRED_PERMISSIONS, PERMISSIONS_REQUEST_CODE)
+            ActivityCompat.requestPermissions(this@FavoriteLocation, REQUIRED_PERMISSIONS, PERMISSIONS_REQUEST_CODE)
         }
     }
 
@@ -336,7 +342,7 @@ class MainActivity : AppCompatActivity() {
             if (checkResult) {
                 updateUI()
             } else {
-                Toast.makeText(this@MainActivity, "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@FavoriteLocation, "퍼미션이 거부되었습니다. 앱을 다시 실행하여 퍼미션을 허용해주세요", Toast.LENGTH_LONG).show()
                 finish()
             }
         }
@@ -349,12 +355,12 @@ class MainActivity : AppCompatActivity() {
                 if (isLocationServicesAvailable()) {
                     isRunTimePermissionsGranted()
                 } else {
-                    Toast.makeText(this@MainActivity, "위치 서비스를 사용할 수 없습니다.", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@FavoriteLocation, "위치 서비스를 사용할 수 없습니다.", Toast.LENGTH_LONG).show()
                     finish()
                 }
             }
         }
-        val builder : AlertDialog.Builder = AlertDialog.Builder(this@MainActivity)
+        val builder : AlertDialog.Builder = AlertDialog.Builder(this@FavoriteLocation)
         builder.setTitle("위치 서비스 비활성화")
         builder.setMessage("위치 서비스가 꺼져 있습니다. 설정해야 앱을 사용할 수 있습니다.")
         builder.setCancelable(true)
@@ -364,42 +370,48 @@ class MainActivity : AppCompatActivity() {
         }
         builder.setNegativeButton("취소") { dialog, _ ->
             dialog.cancel()
-            Toast.makeText(this@MainActivity, "기기에서 위치서비스 설정 후 사용해주세요.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@FavoriteLocation, "기기에서 위치서비스 설정 후 사용해주세요.", Toast.LENGTH_SHORT).show()
             finish()
         }
         builder.create().show()
     }
 
     fun FavoriteClick() {
-        binding.addFavorite.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
-            val tvName = TextView(this)
-            tvName.text = "이름"
-            val etName = EditText(this)
-            etName.isSingleLine = true
-            val mLayout = LinearLayout(this)
-            mLayout.orientation = LinearLayout.VERTICAL
-            mLayout.setPadding(15)
-            mLayout.addView(tvName)
-            mLayout.addView(etName)
-            builder.setView(mLayout)
+        // 즐겨찾기 해제
 
-            builder.setTitle("즐겨찾기로 저장하시겠습니까?")
-            builder.setPositiveButton("확인") { dialog , which ->
-                val data = hashMapOf("name" to etName.text.toString(), "location" to binding.tvLocationTitle.text, "favorite" to favorite_click, "lat" to latitude, "lng" to longitude )
-                db.collection("Favorite_Place")
-                    .add(data)
-                    .addOnSuccessListener {
-                        // 성공
-                        Toast.makeText(this, "즐겨찾기가 추가되었습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w("MainActivity", "Error getting documents: $exception")
-                    }
-            }
-            builder.setNegativeButton("취소") { dialog , which ->
-            }
-            builder.show()
-        }
+//        binding.addFavorite.setOnClickListener {
+//            val builder = AlertDialog.Builder(this)
+//            val tvName = TextView(this)
+//            tvName.text = "이름"
+//            val etName = EditText(this)
+//            etName.isSingleLine = true
+//            val mLayout = LinearLayout(this)
+//            mLayout.orientation = LinearLayout.VERTICAL
+//            mLayout.setPadding(15)
+//            mLayout.addView(tvName)
+//            mLayout.addView(etName)
+//            builder.setView(mLayout)
+//
+//            builder.setTitle("즐겨찾기로 저장하시겠습니까?")
+//            builder.setPositiveButton("확인") { dialog , which ->
+//                val data = hashMapOf("name" to etName.text.toString(), "location" to binding.tvLocationTitle.text, "favorite" to favorite_click, "lat" to latitude, "lng" to longitude )
+//                db.collection("Favorite_Place")
+//                    .add(data)
+//                    .addOnSuccessListener {
+//                        // 성공
+//                        Toast.makeText(this, "즐겨찾기가 추가되었습니다.", Toast.LENGTH_SHORT).show()
+//                    }
+//                    .addOnFailureListener { exception ->
+//                        Log.w("MainActivity", "Error getting documents: $exception")
+//                    }
+//            }
+//            builder.setNegativeButton("취소") { dialog , which ->
+//            }
+//            builder.show()
+//        }
+    }
+
+    fun setFavoriteLocation() {
+
     }
 }

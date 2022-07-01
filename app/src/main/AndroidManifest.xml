@@ -18,9 +18,12 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="31">
         <activity
-            android:name="com.p2glet.airquality.MapActivity"
+            android:name=".FavoriteLocation"
             android:exported="false" />
-        <activity android:name=".FavoriteActivity"/>
+        <activity
+            android:name=".MapActivity"
+            android:exported="false" />
+        <activity android:name=".FavoriteActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -30,7 +33,7 @@
             android:value="ca-app-pub-3610848843940754~9338539988" />
 
         <activity
-            android:name="com.p2glet.airquality.MainActivity"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
