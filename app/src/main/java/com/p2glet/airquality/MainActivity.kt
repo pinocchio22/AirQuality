@@ -388,7 +388,7 @@ class MainActivity : AppCompatActivity() {
 
             builder.setTitle("즐겨찾기로 저장하시겠습니까?")
             builder.setPositiveButton("확인") { dialog , which ->
-                val data = hashMapOf("name" to etName.text.toString(), "location" to binding.tvLocationTitle.text, "favorite" to favorite_click, "lat" to latitude, "lng" to longitude )
+                val data = hashMapOf("name" to etName.text.toString(), "location" to binding.tvLocationTitle.text as String, "favorite" to favorite_click, "lat" to latitude, "lng" to longitude )
                 db.collection("Favorite_Place")
                     .add(data)
                     .addOnSuccessListener {
