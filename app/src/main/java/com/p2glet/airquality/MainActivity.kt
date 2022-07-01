@@ -75,16 +75,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         favorite_click = intent.getBooleanExtra("bool", false)
-        println(favorite_click)
+
 
         checkAllPermissions()
         updateUI()
         setRefreshButton()
         setFab()
+        setBannerAds()
+
+        setFavorite()
         addFavorite()
         FavoriteClick()
-
-        setBannerAds()
     }
 
     override fun onResume() {
@@ -98,6 +99,7 @@ class MainActivity : AppCompatActivity() {
         binding.adView.loadAd(adRequest)
         binding.adView.adListener = object : AdListener() {
             override fun onAdLoaded() {
+                Log.d("here", adRequest.toString())
                 Log.d("ads log","배너 광고가 로드되었습니다.")
             }
 
@@ -106,7 +108,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onAdOpened() {
-                Log.d("ads log","배너 광고를 열었습니다.") //전면에 광고가 오버레이 되었을 때
+                Log.d("ads log","배너 광고를 열었습니다.")
             }
 
             override fun onAdClicked() {
@@ -151,7 +153,9 @@ class MainActivity : AppCompatActivity() {
         })
     }
     private fun setFavorite() {
-
+        if (favorite_click) {
+            binding.addFavorite.setBackgroundResource(R.drawable.ic_star_clicked)
+        }
     }
 
     private fun addFavorite() {
@@ -401,5 +405,9 @@ class MainActivity : AppCompatActivity() {
             }
             builder.show()
         }
+    }
+
+    fun setFavoriteLocation() {
+
     }
 }
