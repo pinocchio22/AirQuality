@@ -25,7 +25,9 @@ import androidx.core.view.setPadding
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.model.Document
 import com.p2glet.airquality.databinding.ActivityFavoriteLocationBinding
 import com.p2glet.airquality.databinding.ActivityMainBinding
 import com.p2glet.airquality.favorite.FavoriteItem
@@ -56,16 +58,6 @@ class FavoriteLocation : AppCompatActivity() {
     var longitude = 0.0
 
     var favorite_click = false
-
-    val startMapActivityResult = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult()
-    ) { result ->
-        if ((result?.resultCode ?: 0) == Activity.RESULT_OK) {
-            latitude = result?.data?.getDoubleExtra("latitude", 0.0) ?: 0.0
-            longitude = result?.data?.getDoubleExtra("longitude", 0.0) ?: 0.0
-            updateUI()
-        }
-    }
 
     var mInterstitialAd : InterstitialAd? = null
 
@@ -185,17 +177,15 @@ class FavoriteLocation : AppCompatActivity() {
         if (latitude == 0.0 || longitude == 0.0) {
             latitude = intent.getDoubleExtra("latitude",0.0)
             longitude = intent.getDoubleExtra("longitude",0.0)
-            println("LOC" + latitude)
-            println("LOC" + longitude)
         }
 
         if (latitude != 0.0 || longitude != 0.0) {
             // 1. 현재 위치를 가져오고 UI 업데이트
-            val address = getCurrentAddress(latitude, longitude)
-            address?.let {
-                binding.tvLocationTitle.text = it.thoroughfare
-                binding.tvLocationSubtitle.text = "${it.countryName} ${it.adminArea}"
-            }
+//            val address = getCurrentAddress(latitude, longitude)
+//            address?.let {
+//                binding.tvLocationTitle.text = it.thoroughfare
+//                binding.tvLocationSubtitle.text = "${it.countryName} ${it.adminArea}"
+//            }
             getAirQualityData(latitude, longitude)
             // 2. 현재 미세먼지 농도를 가져오고 UI 업데이트
         } else {
@@ -356,36 +346,25 @@ class FavoriteLocation : AppCompatActivity() {
 
     fun FavoriteClick() {
         // 즐겨찾기 해제
-
-//        binding.addFavorite.setOnClickListener {
-//            val builder = AlertDialog.Builder(this)
-//            val tvName = TextView(this)
-//            tvName.text = "이름"
-//            val etName = EditText(this)
-//            etName.isSingleLine = true
-//            val mLayout = LinearLayout(this)
-//            mLayout.orientation = LinearLayout.VERTICAL
-//            mLayout.setPadding(15)
-//            mLayout.addView(tvName)
-//            mLayout.addView(etName)
-//            builder.setView(mLayout)
-//
-//            builder.setTitle("즐겨찾기로 저장하시겠습니까?")
-//            builder.setPositiveButton("확인") { dialog , which ->
-//                val data = hashMapOf("name" to etName.text.toString(), "location" to binding.tvLocationTitle.text, "favorite" to favorite_click, "lat" to latitude, "lng" to longitude )
-//                db.collection("Favorite_Place")
-//                    .add(data)
-//                    .addOnSuccessListener {
-//                        // 성공
-//                        Toast.makeText(this, "즐겨찾기가 추가되었습니다.", Toast.LENGTH_SHORT).show()
-//                    }
-//                    .addOnFailureListener { exception ->
-//                        Log.w("MainActivity", "Error getting documents: $exception")
-//                    }
-//            }
-//            builder.setNegativeButton("취소") { dialog , which ->
-//            }
-//            builder.show()
-//        }
+        binding.addFavorite.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("즐겨찾기를 해제하시겠습니까?")
+            builder.setPositiveButton("확인") { dialog, which ->
+                db.collection("Favorite_Place")
+                    .document().update("favorite", false)
+                    .addOnSuccessListener {
+                        // 성공
+                        Toast.makeText(this, "즐겨찾기가 해제되었습니다.", Toast.LENGTH_SHORT).show()
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.w("MainActivity", "Error getting documents: $exception")
+                    }
+            }
+            builder.setNegativeButton("취소") { dialog, which ->
+            }
+            builder.show()
+        }
+        // 메인으로 이동
+        setBack()
     }
 }

@@ -3,8 +3,13 @@ package com.p2glet.airquality
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.p2glet.airquality.databinding.ActivityFavoriteBinding
@@ -51,10 +56,6 @@ class FavoriteActivity : AppCompatActivity() {
                 // 실패
                 Log.d("MainActivity", "Error getting document : $exception")
             }
-    }
-
-    fun itemclick() {
-
     }
 }
 

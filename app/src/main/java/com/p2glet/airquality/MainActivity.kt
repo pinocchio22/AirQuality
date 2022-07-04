@@ -76,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         checkAllPermissions()
         updateUI()
         setRefreshButton()
-        setFab()
+        setFav()
         setBannerAds()
 
         addFavorite()
@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setFab() {
+    private fun setFav() {
         binding.fab.setOnClickListener {
             if (mInterstitialAd != null) {
                 mInterstitialAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
@@ -366,35 +366,44 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun FavoriteClick() {
-        binding.addFavorite.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
-            val tvName = TextView(this)
-            tvName.text = "이름"
-            val etName = EditText(this)
-            etName.isSingleLine = true
-            val mLayout = LinearLayout(this)
-            mLayout.orientation = LinearLayout.VERTICAL
-            mLayout.setPadding(15)
-            mLayout.addView(tvName)
-            mLayout.addView(etName)
-            builder.setView(mLayout)
+        if (favorite_click) {
+            // 즐겨찾기 등록
+            binding.addFavorite.setOnClickListener {
+                val builder = AlertDialog.Builder(this)
+                val tvName = TextView(this)
+                tvName.text = "이름"
+                val etName = EditText(this)
+                etName.isSingleLine = true
+                val mLayout = LinearLayout(this)
+                mLayout.orientation = LinearLayout.VERTICAL
+                mLayout.setPadding(15)
+                mLayout.addView(tvName)
+                mLayout.addView(etName)
+                builder.setView(mLayout)
 
-            builder.setTitle("즐겨찾기로 저장하시겠습니까?")
-            builder.setPositiveButton("확인") { dialog , which ->
-                val data = hashMapOf("name" to etName.text.toString(), "location" to binding.tvLocationTitle.text as String, "favorite" to true, "lat" to latitude, "lng" to longitude )
-                db.collection("Favorite_Place")
-                    .add(data)
-                    .addOnSuccessListener {
-                        // 성공
-                        Toast.makeText(this, "즐겨찾기가 추가되었습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w("MainActivity", "Error getting documents: $exception")
-                    }
+                builder.setTitle("즐겨찾기로 저장하시겠습니까?")
+                builder.setPositiveButton("확인") { dialog, which ->
+                    val data = hashMapOf(
+                        "name" to etName.text.toString(),
+                        "location" to binding.tvLocationTitle.text as String,
+                        "favorite" to true,
+                        "lat" to latitude,
+                        "lng" to longitude
+                    )
+                    db.collection("Favorite_Place")
+                        .add(data)
+                        .addOnSuccessListener {
+                            // 성공
+                            Toast.makeText(this, "즐겨찾기가 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.w("MainActivity", "Error getting documents: $exception")
+                        }
+                }
+                builder.setNegativeButton("취소") { dialog, which ->
+                }
+                builder.show()
             }
-            builder.setNegativeButton("취소") { dialog , which ->
-            }
-            builder.show()
         }
     }
 }
