@@ -80,7 +80,7 @@ class FavoriteLocation : AppCompatActivity() {
         checkAllPermissions()
         updateUI()
         setRefreshButton()
-        setFab()
+        setBack()
         setBannerAds()
 
         setFavorite()
@@ -164,33 +164,10 @@ class FavoriteLocation : AppCompatActivity() {
         }
     }
 
-    private fun setFab() {
-        binding.fab.setOnClickListener {
-            if (mInterstitialAd != null) {
-                mInterstitialAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        Log.d("ads log", "전면 광고가 닫혔습니다.")
-
-                        val intent = Intent(this@FavoriteLocation, MapActivity::class.java)
-                        intent.putExtra("currentLat", latitude)
-                        intent.putExtra("currentLng", longitude)
-                        startMapActivityResult.launch(intent)
-                    }
-
-                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                        Log.d("ads log", "전면 광고가 열리는데 실패했습니다.")
-                    }
-
-                    override fun onAdShowedFullScreenContent() {
-                        Log.d("ads log", "전면 광고가 성공적으로 열렸습니다.")
-                        mInterstitialAd = null
-                    }
-                }
-                mInterstitialAd!!.show(this@FavoriteLocation)
-            } else {
-                Log.d("InterstitialAd", "전면 광고가 로딩되지 않았습니다.")
-                Toast.makeText(this@FavoriteLocation, "잠시 후 다시 시도해주세요.", Toast.LENGTH_LONG).show()
-            }
+    private fun setBack() {
+        binding.backBtn.setOnClickListener {
+            val intent = Intent(this@FavoriteLocation, MainActivity::class.java)
+            startActivity(intent)
         }
     }
 
