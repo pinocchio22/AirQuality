@@ -1,12 +1,16 @@
 package com.p2glet.airquality.favorite
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
+import com.p2glet.airquality.FavoriteActivity
 import com.p2glet.airquality.FavoriteLocation
 import com.p2glet.airquality.MainActivity
 import com.p2glet.airquality.R
@@ -41,6 +45,29 @@ class FavoriteAdapter(val itemList: ArrayList<FavoriteItem>): RecyclerView.Adapt
             intent.putExtra("longitude", itemList[position].lng)
             it.context.startActivity(intent)
         }
+//        // 즐겨찾기 수정
+//        val builder = AlertDialog.Builder(this)
+//        builder.setTitle("즐겨찾기를 해제하시겠습니까?")
+//        builder.setPositiveButton("확인") { dialog, which ->
+//            db.collection("Favorite_Place")
+//                .document("$latitude+$longitude")
+//                .update("favorite", false)
+//                .addOnSuccessListener {
+//                    // 성공
+//                    Toast.makeText(this, "즐겨찾기가 해제되었습니다.", Toast.LENGTH_SHORT)
+//                        .show()
+//                    // 메인으로 이동
+//                    val intent = Intent(this@FavoriteLocation, MainActivity::class.java)
+//                    startActivity(intent)
+//                }
+//                .addOnFailureListener { exception ->
+//                    Log.w("MainActivity", "Error getting documents: $exception")
+//                }
+//        }
+//        builder.setNegativeButton("취소") { dialog, which ->
+//            finish()
+//        }
+//        builder.show()
     }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {

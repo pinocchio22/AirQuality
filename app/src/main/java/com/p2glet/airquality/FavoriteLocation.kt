@@ -2,35 +2,24 @@ package com.p2glet.airquality
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
-import android.location.LocationManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.google.firebase.firestore.DocumentId
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.model.Document
 import com.p2glet.airquality.databinding.ActivityFavoriteLocationBinding
-import com.p2glet.airquality.databinding.ActivityMainBinding
-import com.p2glet.airquality.favorite.FavoriteItem
 import com.p2glet.airquality.retrofit.AirQualityResponse
 import com.p2glet.airquality.retrofit.AirQualityService
 import com.p2glet.airquality.retrofit.RetrofitConnection
@@ -44,14 +33,13 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class FavoriteLocation : AppCompatActivity() {
-    private lateinit var binding : ActivityFavoriteLocationBinding
+    lateinit var binding : ActivityFavoriteLocationBinding
 
     private val PERMISSIONS_REQUEST_CODE = 100
     var REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 
     val db = FirebaseFirestore.getInstance()
 
-    lateinit var getGPSPermissionLauncher : ActivityResultLauncher<Intent>
     lateinit var locationProvider : LocationProvider
 
     var latitude = 0.0
@@ -68,7 +56,6 @@ class FavoriteLocation : AppCompatActivity() {
 
         favorite_click = intent.getBooleanExtra("bool", false)
 
-        checkAllPermissions()
         updateUI()
         setRefreshButton()
         setBack()
@@ -270,28 +257,6 @@ class FavoriteLocation : AppCompatActivity() {
         return address
     }
 
-    private fun checkAllPermissions() {
-        if (!isLocationServicesAvailable()) {
-            showDialogForLocationServiceSetting()
-        } else {
-            isRunTimePermissionsGranted()
-        }
-    }
-
-    fun isLocationServicesAvailable() : Boolean {
-        val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
-        return (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER))
-    }
-
-    fun isRunTimePermissionsGranted() {
-        val hasFineLocationPermission = ContextCompat.checkSelfPermission(this@FavoriteLocation, Manifest.permission.ACCESS_FINE_LOCATION)
-        val hasCoarseLocationPermission = ContextCompat.checkSelfPermission(this@FavoriteLocation, Manifest.permission.ACCESS_COARSE_LOCATION)
-        if (hasFineLocationPermission != PackageManager.PERMISSION_GRANTED || hasCoarseLocationPermission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this@FavoriteLocation, REQUIRED_PERMISSIONS, PERMISSIONS_REQUEST_CODE)
-        }
-    }
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -315,98 +280,73 @@ class FavoriteLocation : AppCompatActivity() {
         }
     }
 
-    private fun showDialogForLocationServiceSetting() {
-        getGPSPermissionLauncher = registerForActivityResult(
-            ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                if (isLocationServicesAvailable()) {
-                    isRunTimePermissionsGranted()
-                } else {
-                    Toast.makeText(this@FavoriteLocation, "위치 서비스를 사용할 수 없습니다.", Toast.LENGTH_LONG).show()
-                    finish()
-                }
-            }
-        }
-        val builder : AlertDialog.Builder = AlertDialog.Builder(this@FavoriteLocation)
-        builder.setTitle("위치 서비스 비활성화")
-        builder.setMessage("위치 서비스가 꺼져 있습니다. 설정해야 앱을 사용할 수 있습니다.")
-        builder.setCancelable(true)
-        builder.setPositiveButton("설정") { _, _ ->
-            val callGPSSettingIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-            getGPSPermissionLauncher.launch(callGPSSettingIntent)
-        }
-        builder.setNegativeButton("취소") { dialog, _ ->
-            dialog.cancel()
-            Toast.makeText(this@FavoriteLocation, "기기에서 위치서비스 설정 후 사용해주세요.", Toast.LENGTH_SHORT).show()
-            finish()
-        }
-        builder.create().show()
-    }
-
     fun FavoriteClick() {
-        if (!favorite_click) {
             // 즐겨찾기 등록
             binding.addFavorite.setOnClickListener {
-                val builder = AlertDialog.Builder(this)
-                val tvName = TextView(this)
-                tvName.text = "이름"
-                val etName = EditText(this)
-                etName.isSingleLine = true
-                val mLayout = LinearLayout(this)
-                mLayout.orientation = LinearLayout.VERTICAL
-                mLayout.setPadding(15)
-                mLayout.addView(tvName)
-                mLayout.addView(etName)
-                builder.setView(mLayout)
+                if (!favorite_click) {
+                    val builder = AlertDialog.Builder(this)
+                    val tvName = TextView(this)
+                    tvName.text = "이름"
+                    val etName = EditText(this)
+                    etName.isSingleLine = true
+                    val mLayout = LinearLayout(this)
+                    mLayout.orientation = LinearLayout.VERTICAL
+                    mLayout.setPadding(15)
+                    mLayout.addView(tvName)
+                    mLayout.addView(etName)
+                    builder.setView(mLayout)
 
-                builder.setTitle("즐겨찾기로 저장하시겠습니까?")
-                builder.setPositiveButton("확인") { dialog, which ->
-                    val data = hashMapOf(
-                        "name" to etName.text.toString(),
-                        "location" to binding.tvLocationTitle.text as String,
-                        "favorite" to true,
-                        "lat" to latitude,
-                        "lng" to longitude
-                    )
-                    db.collection("Favorite_Place")
-                        .document("$latitude+$longitude")
-                        .set(data)
-                        .addOnSuccessListener {
-                            // 성공
-                            Toast.makeText(this, "즐겨찾기가 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                    builder.setTitle("즐겨찾기로 저장하시겠습니까?")
+                    builder.setPositiveButton("확인") { dialog, which ->
+                        val data = hashMapOf(
+                            "name" to etName.text.toString(),
+                            "location" to binding.tvLocationTitle.text as String,
+                            "favorite" to true,
+                            "lat" to latitude,
+                            "lng" to longitude
+                        )
+                        db.collection("Favorite_Place")
+                            .document("$latitude+$longitude")
+                            .set(data)
+                            .addOnSuccessListener {
+                                // 성공
+                                Toast.makeText(this, "즐겨찾기가 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                            }
+                            .addOnFailureListener { exception ->
+                                Log.w("MainActivity", "Error getting documents: $exception")
+                            }
+                    }
+                    builder.setNegativeButton("취소") { dialog, which ->
+                    }
+                    builder.show()
+                } else {
+                    // 즐겨찾기 해제
+                        val builder = AlertDialog.Builder(this)
+                        builder.setTitle("즐겨찾기를 해제하시겠습니까?")
+                        builder.setPositiveButton("확인") { dialog, which ->
+                            db.collection("Favorite_Place")
+                                    //수정
+                                // .document("$latitude+$longitude").update("favorite", false)
+                                .document("$latitude+$longitude")
+                                .delete()
+                                .addOnCompleteListener {
+                                    // 성공
+                                    Toast.makeText(this, "즐겨찾기가 해제되었습니다.", Toast.LENGTH_SHORT)
+                                        .show()
+                                    // 메인으로 이동
+                                    val intent = Intent(this@FavoriteLocation, MainActivity::class.java)
+                                    startActivity(intent)
+                                }
+                                .addOnFailureListener { exception ->
+                                    Log.w("MainActivity", "Error getting documents: $exception")
+                                }
                         }
-                        .addOnFailureListener { exception ->
-                            Log.w("MainActivity", "Error getting documents: $exception")
+                        builder.setNegativeButton("취소") { dialog, which ->
+                            finish()
                         }
+                        builder.show()
+                    }
                 }
-                builder.setNegativeButton("취소") { dialog, which ->
-                }
-                builder.show()
-            }
-        } else {
-            // 즐겨찾기 해제
-            binding.addFavorite.setOnClickListener {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("즐겨찾기를 해제하시겠습니까?")
-                builder.setPositiveButton("확인") { dialog, which ->
-                    db.collection("Favorite_Place")
-                            // .document("$latitude+$longitude").update("favorite", false)
-                        .document("$latitude+$longitude").delete()
-                        .addOnSuccessListener {
-                            // 성공
-                            Toast.makeText(this, "즐겨찾기가 해제되었습니다.", Toast.LENGTH_SHORT).show()
-                        }
-                        .addOnFailureListener { exception ->
-                            Log.w("MainActivity", "Error getting documents: $exception")
-                        }
-                }
-                builder.setNegativeButton("취소") { dialog, which ->
-                }
-                builder.show()
-            }
-            // 메인으로 이동
-            val intent = Intent(this@FavoriteLocation, MainActivity::class.java)
-            startActivity(intent)
-        }
+
     }
 }
