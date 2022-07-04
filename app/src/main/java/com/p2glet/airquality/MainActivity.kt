@@ -366,7 +366,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun FavoriteClick() {
-        if (favorite_click) {
+        if (!favorite_click) {
+            println("등록등록")
             // 즐겨찾기 등록
             binding.addFavorite.setOnClickListener {
                 val builder = AlertDialog.Builder(this)
@@ -391,7 +392,8 @@ class MainActivity : AppCompatActivity() {
                         "lng" to longitude
                     )
                     db.collection("Favorite_Place")
-                        .add(data)
+                        .document("$latitude+$longitude")
+                        .set(data)
                         .addOnSuccessListener {
                             // 성공
                             Toast.makeText(this, "즐겨찾기가 추가되었습니다.", Toast.LENGTH_SHORT).show()

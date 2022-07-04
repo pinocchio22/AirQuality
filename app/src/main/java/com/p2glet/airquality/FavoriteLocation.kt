@@ -177,15 +177,16 @@ class FavoriteLocation : AppCompatActivity() {
         if (latitude == 0.0 || longitude == 0.0) {
             latitude = intent.getDoubleExtra("latitude",0.0)
             longitude = intent.getDoubleExtra("longitude",0.0)
+            println(latitude)
         }
 
         if (latitude != 0.0 || longitude != 0.0) {
-            // 1. 현재 위치를 가져오고 UI 업데이트
-//            val address = getCurrentAddress(latitude, longitude)
-//            address?.let {
-//                binding.tvLocationTitle.text = it.thoroughfare
-//                binding.tvLocationSubtitle.text = "${it.countryName} ${it.adminArea}"
-//            }
+//             1. 현재 위치를 가져오고 UI 업데이트
+            val address = getCurrentAddress(latitude, longitude)
+            address?.let {
+                binding.tvLocationTitle.text = it.thoroughfare
+                binding.tvLocationSubtitle.text = "${it.countryName} ${it.adminArea}"
+            }
             getAirQualityData(latitude, longitude)
             // 2. 현재 미세먼지 농도를 가져오고 UI 업데이트
         } else {
@@ -345,26 +346,67 @@ class FavoriteLocation : AppCompatActivity() {
     }
 
     fun FavoriteClick() {
-        // 즐겨찾기 해제
-        binding.addFavorite.setOnClickListener {
-            val builder = AlertDialog.Builder(this)
-            builder.setTitle("즐겨찾기를 해제하시겠습니까?")
-            builder.setPositiveButton("확인") { dialog, which ->
-                db.collection("Favorite_Place")
-                    .document().update("favorite", false)
-                    .addOnSuccessListener {
-                        // 성공
-                        Toast.makeText(this, "즐겨찾기가 해제되었습니다.", Toast.LENGTH_SHORT).show()
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w("MainActivity", "Error getting documents: $exception")
-                    }
+        if (!favorite_click) {
+            // 즐겨찾기 등록
+            binding.addFavorite.setOnClickListener {
+                val builder = AlertDialog.Builder(this)
+                val tvName = TextView(this)
+                tvName.text = "이름"
+                val etName = EditText(this)
+                etName.isSingleLine = true
+                val mLayout = LinearLayout(this)
+                mLayout.orientation = LinearLayout.VERTICAL
+                mLayout.setPadding(15)
+                mLayout.addView(tvName)
+                mLayout.addView(etName)
+                builder.setView(mLayout)
+
+                builder.setTitle("즐겨찾기로 저장하시겠습니까?")
+                builder.setPositiveButton("확인") { dialog, which ->
+                    val data = hashMapOf(
+                        "name" to etName.text.toString(),
+                        "location" to binding.tvLocationTitle.text as String,
+                        "favorite" to true,
+                        "lat" to latitude,
+                        "lng" to longitude
+                    )
+                    db.collection("Favorite_Place")
+                        .document("$latitude+$longitude")
+                        .set(data)
+                        .addOnSuccessListener {
+                            // 성공
+                            Toast.makeText(this, "즐겨찾기가 추가되었습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.w("MainActivity", "Error getting documents: $exception")
+                        }
+                }
+                builder.setNegativeButton("취소") { dialog, which ->
+                }
+                builder.show()
             }
-            builder.setNegativeButton("취소") { dialog, which ->
+        } else {
+            // 즐겨찾기 해제
+            binding.addFavorite.setOnClickListener {
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("즐겨찾기를 해제하시겠습니까?")
+                builder.setPositiveButton("확인") { dialog, which ->
+                    db.collection("Favorite_Place")
+                        .document("$latitude+$longitude").update("favorite", false)
+                        .addOnSuccessListener {
+                            // 성공
+                            Toast.makeText(this, "즐겨찾기가 해제되었습니다.", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener { exception ->
+                            Log.w("MainActivity", "Error getting documents: $exception")
+                        }
+                }
+                builder.setNegativeButton("취소") { dialog, which ->
+                }
+                builder.show()
             }
-            builder.show()
+            // 메인으로 이동
+            setBack()
         }
-        // 메인으로 이동
-        setBack()
     }
 }
