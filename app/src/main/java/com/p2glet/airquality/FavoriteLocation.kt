@@ -68,7 +68,6 @@ class FavoriteLocation : AppCompatActivity() {
 
         favorite_click = intent.getBooleanExtra("bool", false)
 
-
         checkAllPermissions()
         updateUI()
         setRefreshButton()
@@ -177,7 +176,6 @@ class FavoriteLocation : AppCompatActivity() {
         if (latitude == 0.0 || longitude == 0.0) {
             latitude = intent.getDoubleExtra("latitude",0.0)
             longitude = intent.getDoubleExtra("longitude",0.0)
-            println(latitude)
         }
 
         if (latitude != 0.0 || longitude != 0.0) {
@@ -392,7 +390,8 @@ class FavoriteLocation : AppCompatActivity() {
                 builder.setTitle("즐겨찾기를 해제하시겠습니까?")
                 builder.setPositiveButton("확인") { dialog, which ->
                     db.collection("Favorite_Place")
-                        .document("$latitude+$longitude").update("favorite", false)
+                            // .document("$latitude+$longitude").update("favorite", false)
+                        .document("$latitude+$longitude").delete()
                         .addOnSuccessListener {
                             // 성공
                             Toast.makeText(this, "즐겨찾기가 해제되었습니다.", Toast.LENGTH_SHORT).show()
@@ -406,7 +405,8 @@ class FavoriteLocation : AppCompatActivity() {
                 builder.show()
             }
             // 메인으로 이동
-            setBack()
+            val intent = Intent(this@FavoriteLocation, MainActivity::class.java)
+            startActivity(intent)
         }
     }
 }

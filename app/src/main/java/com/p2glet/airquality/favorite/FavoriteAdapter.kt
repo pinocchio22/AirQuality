@@ -39,8 +39,6 @@ class FavoriteAdapter(val itemList: ArrayList<FavoriteItem>): RecyclerView.Adapt
             intent.putExtra("bool", itemList[position].favorite)
             intent.putExtra("latitude", itemList[position].lat)
             intent.putExtra("longitude", itemList[position].lng)
-            println("PUT" + itemList[position].lat)
-            println("PUT" + itemList[position].lng)
             it.context.startActivity(intent)
         }
     }

@@ -198,8 +198,6 @@ class MainActivity : AppCompatActivity() {
         if (latitude == 0.0 || longitude == 0.0) {
             latitude = locationProvider.getLocationLatitude()
             longitude = locationProvider.getLocationLongitude()
-            println("Main" + latitude)
-            println("Main" + longitude)
         }
 
         if (latitude != 0.0 || longitude != 0.0) {
@@ -367,7 +365,6 @@ class MainActivity : AppCompatActivity() {
 
     fun FavoriteClick() {
         if (!favorite_click) {
-            println("등록등록")
             // 즐겨찾기 등록
             binding.addFavorite.setOnClickListener {
                 val builder = AlertDialog.Builder(this)
