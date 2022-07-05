@@ -1,15 +1,16 @@
 package com.p2glet.airquality.favorite
 
+import android.app.Activity
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.firestore.FirebaseFirestore
 import com.p2glet.airquality.FavoriteActivity
 import com.p2glet.airquality.FavoriteLocation
 import com.p2glet.airquality.MainActivity
@@ -22,6 +23,9 @@ import com.p2glet.airquality.R
 * @desc
 */
 class FavoriteAdapter(val itemList: ArrayList<FavoriteItem>): RecyclerView.Adapter<FavoriteAdapter.ViewHolder>() {
+
+    val db = FirebaseFirestore.getInstance()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.favorite_item, parent, false)
         return ViewHolder(view)
@@ -45,34 +49,42 @@ class FavoriteAdapter(val itemList: ArrayList<FavoriteItem>): RecyclerView.Adapt
             intent.putExtra("longitude", itemList[position].lng)
             it.context.startActivity(intent)
         }
-//        // 즐겨찾기 수정
-//        val builder = AlertDialog.Builder(this)
-//        builder.setTitle("즐겨찾기를 해제하시겠습니까?")
-//        builder.setPositiveButton("확인") { dialog, which ->
-//            db.collection("Favorite_Place")
-//                .document("$latitude+$longitude")
-//                .update("favorite", false)
-//                .addOnSuccessListener {
-//                    // 성공
-//                    Toast.makeText(this, "즐겨찾기가 해제되었습니다.", Toast.LENGTH_SHORT)
-//                        .show()
-//                    // 메인으로 이동
-//                    val intent = Intent(this@FavoriteLocation, MainActivity::class.java)
-//                    startActivity(intent)
-//                }
-//                .addOnFailureListener { exception ->
-//                    Log.w("MainActivity", "Error getting documents: $exception")
-//                }
-//        }
-//        builder.setNegativeButton("취소") { dialog, which ->
-//            finish()
-//        }
-//        builder.show()
+        // 즐겨찾기 수정
+        holder.setting.setOnClickListener {
+            val builder = AlertDialog.Builder(it.context)
+            val tvName = TextView(it.context)
+            tvName.text = "이름"
+            val etName = EditText(it.context)
+            etName.isSingleLine = true
+            val mLayout = LinearLayout(it.context)
+            mLayout.orientation = LinearLayout.VERTICAL
+            mLayout.setPadding(15)
+            mLayout.addView(tvName)
+            mLayout.addView(etName)
+            builder.setView(mLayout)
+
+            builder.setTitle("이름을 수정하시겠습니까?")
+            builder.setPositiveButton("확인") { dialog, which ->
+                db.collection("Favorite_Place")
+                    .document("${itemList[position].lat}+${itemList[position].lng}")
+                    .update("name", etName.text.toString())
+                    .addOnSuccessListener {
+                        // 성공
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.w("FavoriteAdapter", "Error update documents: $exception")
+                    }
+            }
+            builder.setNegativeButton("취소") { dialog, which ->
+            }
+            builder.show()
+        }
     }
 
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         val name : TextView = itemView.findViewById(R.id.name)
         val location : TextView = itemView.findViewById(R.id.location)
         val favorite : Button = itemView.findViewById(R.id.item_favorite)
+        val setting : Button = itemView.findViewById(R.id.setting_btn)
     }
 }
