@@ -7,13 +7,14 @@
         <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/drawable/ic_launcher_new_background.xml" value="0.1285" />
         <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/drawable/ic_star_click.xml" value="0.173" />
         <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/drawable/ic_star_clicked.xml" value="0.15" />
+        <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/drawable/item_line.xml" value="0.12" />
         <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/layout/activity_favorite.xml" value="0.22" />
         <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/layout/activity_favorite_location.xml" value="0.2" />
         <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/layout/activity_favorite_main.xml" value="0.25416666666666665" />
         <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/layout/activity_main2.xml" value="0.240625" />
         <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/layout/activity_map.xml" value="0.2578125" />
-        <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/layout/favorite_item.xml" value="0.2" />
+        <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/layout/favorite_item.xml" value="0.22" />
         <entry key="..\:/ANDTEST/AirQuality/app/src/main/res/layout/recyclerview_favorite.xml" value="0.25" />
       </map>
     </option>
