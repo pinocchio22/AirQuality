@@ -25,7 +25,8 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/item_favorite"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/location"/>
 
     <TextView
         android:id="@+id/location"
@@ -36,7 +37,8 @@
         android:text="location"
         android:textSize="18sp"
         app:layout_constraintStart_toEndOf="@id/name"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/setting_btn"/>
 
     <Button
         android:id="@+id/setting_btn"
@@ -46,6 +48,6 @@
         android:background="@drawable/ic_setting"
         android:backgroundTint="@color/grey"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

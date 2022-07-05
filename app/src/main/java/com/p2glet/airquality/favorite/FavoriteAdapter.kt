@@ -70,6 +70,7 @@ class FavoriteAdapter(val itemList: ArrayList<FavoriteItem>): RecyclerView.Adapt
                     .update("name", etName.text.toString())
                     .addOnSuccessListener {
                         // 성공
+                        notifyDataSetChanged()
                     }
                     .addOnFailureListener { exception ->
                         Log.w("FavoriteAdapter", "Error update documents: $exception")
