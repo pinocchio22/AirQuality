@@ -8,12 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.p2glet.airquality.FavoriteActivity
 import com.p2glet.airquality.FavoriteLocation
-import com.p2glet.airquality.MainActivity
 import com.p2glet.airquality.R
 
 /**
@@ -68,9 +68,11 @@ class FavoriteAdapter(val itemList: ArrayList<FavoriteItem>): RecyclerView.Adapt
                 db.collection("Favorite_Place")
                     .document("${itemList[position].lat}+${itemList[position].lng}")
                     .update("name", etName.text.toString())
-                    .addOnSuccessListener {
+                    .addOnSuccessListener { success ->
                         // 성공
-                        notifyDataSetChanged()
+                        (it.context as Activity).finish()
+                        val intent = Intent(it.context, FavoriteActivity::class.java)
+                        it.context.startActivity(intent)
                     }
                     .addOnFailureListener { exception ->
                         Log.w("FavoriteAdapter", "Error update documents: $exception")
