@@ -1,30 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".LoginActivity">
 
-    <Button
+    <ImageView
+        android:id="@+id/background_logo"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:text="Signin Facebook"
-        android:background="@drawable/btn_signin_facebook"
-        android:id="@+id/login_facebook"/>
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@drawable/cloud"
+        tools:layout_editor_absoluteX="20dp"
+        tools:layout_editor_absoluteY="30dp" />
 
+    <ImageView
+        android:id="@+id/icon_logo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/icon_mimon1"
+        app:layout_constraintLeft_toRightOf="@id/guideline1"
+        app:layout_constraintRight_toLeftOf="@id/guideline2"
+        app:layout_constraintBottom_toTopOf="@id/guideline3"
+        app:layout_constraintTop_toBottomOf="@id/guideline4"
+        android:scaleType="fitXY"
+        />
 
-    <com.google.android.gms.common.SignInButton
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/login_layout"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/login_google"/>
+        android:layout_height="200dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:id="@+id/logout_btn"
-        android:text="Logout"/>
+        <Button
+            android:id="@+id/login_facebook"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="30dp"
+            android:background="@drawable/btn_signin_facebook"
+            android:text="Sign in Facebook"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-</LinearLayout>
+        <Button
+            android:id="@+id/login_google"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="30dp"
+            android:background="@drawable/btn_signin_google"
+            android:text="Sign in Google"
+            app:layout_constraintTop_toBottomOf="@id/login_facebook" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="60dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="60dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="220dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="100dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

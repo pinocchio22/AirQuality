@@ -1,11 +1,11 @@
 package com.p2glet.airquality
 
+import android.R
 import android.content.Intent
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Base64
-import android.util.Log
+import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.AccessToken
@@ -24,8 +24,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.p2glet.airquality.databinding.ActivityLoginBinding
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.util.*
 
 
@@ -45,8 +43,12 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
         auth = FirebaseAuth.getInstance()
 
+        // range of Alpha : 0~255
+        binding.backgroundLogo.background.alpha = 150
+        binding.iconLogo.drawable.alpha = 180
+
         var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestIdToken("33521507868-da69s5m001eis0pmmrifa84v01umoo15.apps.googleusercontent.com")
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this,gso)
