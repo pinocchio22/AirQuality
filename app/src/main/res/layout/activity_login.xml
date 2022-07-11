@@ -10,19 +10,19 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:text="Login Google"
-        android:background="@drawable/btn_signin_google"
-        android:id="@+id/login_google"/>
+        android:text="Signin Facebook"
+        android:background="@drawable/btn_signin_facebook"
+        android:id="@+id/login_facebook"/>
 
 
     <com.google.android.gms.common.SignInButton
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/login_btn"/>
+        android:layout_height="40dp"
+        android:id="@+id/login_google"/>
 
     <Button
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:id="@+id/logout_btn"
         android:text="Logout"/>
 
