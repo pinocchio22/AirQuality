@@ -63,6 +63,11 @@ class LoginActivity : AppCompatActivity() {
 //        googleLogout()
     }
 
+    override fun onStart() {
+        super.onStart()
+        moveMain(auth?.currentUser)
+    }
+
     fun moveMain(user : FirebaseUser?) {
         if (user != null) {
             startActivity(Intent(this, MainActivity::class.java))

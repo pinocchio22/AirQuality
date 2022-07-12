@@ -146,15 +146,47 @@
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/fav_btn"
+        android:id="@+id/fab_logout"
         android:layout_marginBottom="30dp"
-        android:layout_marginEnd="10dp"
+        android:layout_marginEnd="23dp"
+        android:backgroundTint="@color/yellow"
+        android:src="@drawable/ic_logout"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toTopOf="@id/fab_fav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white"
+        app:pressedTranslationZ="12dp"
+        android:visibility="invisible"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fab_fav"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="23dp"
         android:backgroundTint="@color/yellow"
         android:src="@drawable/ic_star_clicked"
         app:borderWidth="0dp"
-        app:layout_constraintBottom_toTopOf="@id/adView"
-        app:layout_constraintEnd_toStartOf="@id/fab"
-        app:tint="@color/white"/>
+        app:layout_constraintBottom_toTopOf="@id/fab_map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white"
+        app:pressedTranslationZ="12dp"
+        android:visibility="invisible"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/fab_map"
+        android:layout_marginBottom="30dp"
+        android:layout_marginEnd="23dp"
+        android:backgroundTint="@color/yellow"
+        android:src="@drawable/icon_map"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toTopOf="@id/fab"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/white"
+        app:pressedTranslationZ="12dp"
+        android:visibility="invisible"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:layout_width="wrap_content"
@@ -163,11 +195,12 @@
         android:layout_marginBottom="30dp"
         android:layout_marginEnd="23dp"
         android:backgroundTint="@color/yellow"
-        android:src="@drawable/icon_map"
+        android:src="@drawable/ic_check"
         app:borderWidth="0dp"
         app:layout_constraintBottom_toTopOf="@id/adView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@color/white"/>
+        app:tint="@color/white"
+        />
 
     <com.google.android.gms.ads.AdView
         android:layout_width="match_parent"

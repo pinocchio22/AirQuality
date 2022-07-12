@@ -8,11 +8,11 @@ import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.location.LocationManager
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
-import android.view.View
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -20,18 +20,18 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.firebase.firestore.FirebaseFirestore
 import com.p2glet.airquality.databinding.ActivityMainBinding
 import com.p2glet.airquality.retrofit.AirQualityResponse
 import com.p2glet.airquality.retrofit.AirQualityService
 import com.p2glet.airquality.retrofit.RetrofitConnection
-import com.google.android.gms.ads.interstitial.InterstitialAd
-import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
-import com.google.firebase.firestore.FirebaseFirestore
-import com.p2glet.airquality.favorite.FavoriteItem
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -40,6 +40,7 @@ import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding : ActivityMainBinding
@@ -57,6 +58,10 @@ class MainActivity : AppCompatActivity() {
 
     var favorite_click = false
 
+    private var fab_open : Animation ?= null
+    private  var fab_close :Animation ?= null
+    private var isFabOpen = false
+
     val startMapActivityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()
     ) { result ->
         if ((result?.resultCode ?: 0) == Activity.RESULT_OK) {
@@ -73,12 +78,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        fab_open = AnimationUtils.loadAnimation(applicationContext, R.anim.fab_open)
+        fab_close = AnimationUtils.loadAnimation(applicationContext, R.anim.fab_close)
+
         checkAllPermissions()
         updateUI()
         setRefreshButton()
         setFav()
         setBannerAds()
 
+        anim()
         addFavorite()
         FavoriteClick()
     }
@@ -86,6 +95,30 @@ class MainActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         setInterstitialAds()
+    }
+
+    // activity?.finish()
+    //                startActivity(Intent(activity, LoginActivity::class.java))
+    //                auth?.signOut()
+
+    fun anim() {
+        if (isFabOpen) {
+            binding.fabFav.startAnimation(fab_close)
+            binding.fabMap.startAnimation(fab_close)
+            binding.fabLogout.startAnimation(fab_close)
+            binding.fabFav.isClickable = false
+            binding.fabMap.isClickable = false
+            binding.fabLogout.isClickable = false
+            isFabOpen = false
+        } else {
+            binding.fabFav.startAnimation(fab_open)
+            binding.fabMap.startAnimation(fab_open)
+            binding.fabLogout.startAnimation(fab_open)
+            binding.fabFav.isClickable = true
+            binding.fabMap.isClickable = true
+            binding.fabLogout.isClickable = true
+            isFabOpen = true
+        }
     }
 
     private fun setBannerAds(){
@@ -148,14 +181,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun addFavorite() {
-        binding.favBtn.setOnClickListener {
+        binding.fabFav.setOnClickListener {
             val intent = Intent(this@MainActivity, FavoriteActivity::class.java)
             startActivity(intent)
         }
     }
 
     private fun setFav() {
-        binding.fab.setOnClickListener {
+        binding.fabMap.setOnClickListener {
             if (mInterstitialAd != null) {
                 mInterstitialAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
                     override fun onAdDismissedFullScreenContent() {

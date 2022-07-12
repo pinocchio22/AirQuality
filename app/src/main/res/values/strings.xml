@@ -2,6 +2,6 @@
     <string name="app_name">미몬</string>
     <string name="server_client_id">33521507868-58g9ad6ukhi2fj0i8f0h5f9r22as2q7f.apps.googleusercontent.com</string>
     <string name="facebook_app_id">454084432831864</string>
-    <string name="fb_login_protocol_scheme">fb1234</string>
+    <string name="fb_login_protocol_scheme">fb454084432831864</string>
     <string name="facebook_client_token">37f8c9334b111b011dc15934da93e0e6</string>
 </resources>
