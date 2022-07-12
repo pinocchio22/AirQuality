@@ -27,6 +27,7 @@ import androidx.core.view.setPadding
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.p2glet.airquality.databinding.ActivityMainBinding
 import com.p2glet.airquality.retrofit.AirQualityResponse
@@ -49,6 +50,8 @@ class MainActivity : AppCompatActivity() {
     var REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
 
     val db = FirebaseFirestore.getInstance()
+
+    var auth = FirebaseAuth.getInstance()
 
     lateinit var getGPSPermissionLauncher : ActivityResultLauncher<Intent>
     lateinit var locationProvider : LocationProvider
@@ -81,14 +84,17 @@ class MainActivity : AppCompatActivity() {
         fab_open = AnimationUtils.loadAnimation(applicationContext, R.anim.fab_open)
         fab_close = AnimationUtils.loadAnimation(applicationContext, R.anim.fab_close)
 
+        binding.fab.setOnClickListener {
+            anim()
+            setFabLogout()
+            setFabMap()
+            setFabFav()
+        }
+
         checkAllPermissions()
         updateUI()
         setRefreshButton()
-        setFav()
         setBannerAds()
-
-        anim()
-        addFavorite()
         FavoriteClick()
     }
 
@@ -96,10 +102,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
         setInterstitialAds()
     }
-
-    // activity?.finish()
-    //                startActivity(Intent(activity, LoginActivity::class.java))
-    //                auth?.signOut()
 
     fun anim() {
         if (isFabOpen) {
@@ -118,6 +120,52 @@ class MainActivity : AppCompatActivity() {
             binding.fabMap.isClickable = true
             binding.fabLogout.isClickable = true
             isFabOpen = true
+        }
+    }
+
+    fun setFabLogout() {
+        binding.fabLogout.setOnClickListener {
+            finish()
+            val intent = Intent(this@MainActivity, LoginActivity::class.java)
+            startActivity(intent)
+            auth.signOut()
+        }
+    }
+
+    private fun setFabFav() {
+        binding.fabFav.setOnClickListener {
+            val intent = Intent(this@MainActivity, FavoriteActivity::class.java)
+            startActivity(intent)
+        }
+    }
+
+    private fun setFabMap() {
+        binding.fabMap.setOnClickListener {
+            if (mInterstitialAd != null) {
+                mInterstitialAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        Log.d("ads log", "전면 광고가 닫혔습니다.")
+
+                        val intent = Intent(this@MainActivity, MapActivity::class.java)
+                        intent.putExtra("currentLat", latitude)
+                        intent.putExtra("currentLng", longitude)
+                        startMapActivityResult.launch(intent)
+                    }
+
+                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
+                        Log.d("ads log", "전면 광고가 열리는데 실패했습니다.")
+                    }
+
+                    override fun onAdShowedFullScreenContent() {
+                        Log.d("ads log", "전면 광고가 성공적으로 열렸습니다.")
+                        mInterstitialAd = null
+                    }
+                }
+                mInterstitialAd!!.show(this@MainActivity)
+            } else {
+                Log.d("InterstitialAd", "전면 광고가 로딩되지 않았습니다.")
+                Toast.makeText(this@MainActivity, "잠시 후 다시 시도해주세요.", Toast.LENGTH_LONG).show()
+            }
         }
     }
 
@@ -178,43 +226,6 @@ class MainActivity : AppCompatActivity() {
                 mInterstitialAd = interstitialAd
             }
         })
-    }
-
-    private fun addFavorite() {
-        binding.fabFav.setOnClickListener {
-            val intent = Intent(this@MainActivity, FavoriteActivity::class.java)
-            startActivity(intent)
-        }
-    }
-
-    private fun setFav() {
-        binding.fabMap.setOnClickListener {
-            if (mInterstitialAd != null) {
-                mInterstitialAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
-                    override fun onAdDismissedFullScreenContent() {
-                        Log.d("ads log", "전면 광고가 닫혔습니다.")
-
-                        val intent = Intent(this@MainActivity, MapActivity::class.java)
-                        intent.putExtra("currentLat", latitude)
-                        intent.putExtra("currentLng", longitude)
-                        startMapActivityResult.launch(intent)
-                    }
-
-                    override fun onAdFailedToShowFullScreenContent(adError: AdError) {
-                        Log.d("ads log", "전면 광고가 열리는데 실패했습니다.")
-                    }
-
-                    override fun onAdShowedFullScreenContent() {
-                        Log.d("ads log", "전면 광고가 성공적으로 열렸습니다.")
-                        mInterstitialAd = null
-                    }
-                }
-                mInterstitialAd!!.show(this@MainActivity)
-            } else {
-                Log.d("InterstitialAd", "전면 광고가 로딩되지 않았습니다.")
-                Toast.makeText(this@MainActivity, "잠시 후 다시 시도해주세요.", Toast.LENGTH_LONG).show()
-            }
-        }
     }
 
     private fun setRefreshButton() {
