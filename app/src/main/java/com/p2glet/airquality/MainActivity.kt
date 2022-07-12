@@ -105,6 +105,7 @@ class MainActivity : AppCompatActivity() {
 
     fun anim() {
         if (isFabOpen) {
+            binding.fab.setImageResource(R.drawable.ic_plus)
             binding.fabFav.startAnimation(fab_close)
             binding.fabMap.startAnimation(fab_close)
             binding.fabLogout.startAnimation(fab_close)
@@ -113,6 +114,7 @@ class MainActivity : AppCompatActivity() {
             binding.fabLogout.isClickable = false
             isFabOpen = false
         } else {
+            binding.fab.setImageResource(R.drawable.ic_close)
             binding.fabFav.startAnimation(fab_open)
             binding.fabMap.startAnimation(fab_open)
             binding.fabLogout.startAnimation(fab_open)
