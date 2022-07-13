@@ -314,9 +314,6 @@ class MainActivity : AppCompatActivity() {
 
     fun getCurrentAddress(latitude : Double, longitude : Double) : Address? {
         val geocoder = Geocoder(this, Locale.getDefault())
-        // Address 객체는 주소와 관련된 여러 정보를 가지고 있습니다.
-        // android.location.Address 패키지 참고.
-
         val addresses : List<Address>? = try {
             // Geocoder 객체를 이용하여 위도와 경도로부터 리스트를 가져옵니다.
             geocoder.getFromLocation(latitude, longitude, 7)
@@ -432,7 +429,8 @@ class MainActivity : AppCompatActivity() {
                         "location" to binding.tvLocationTitle.text as String,
                         "favorite" to true,
                         "lat" to latitude,
-                        "lng" to longitude
+                        "lng" to longitude,
+                        "uid" to auth.uid
                     )
                     db.collection("Favorite_Place")
                         .document("$latitude+$longitude")

@@ -47,7 +47,7 @@ class FavoriteActivity : AppCompatActivity() {
                 // 성공
                 itemlist.clear()
                 for (document in result) {
-                    val item = FavoriteItem(document["name"] as String, document["location"] as String, document["favorite"] as Boolean, document["lat"] as Double, document["lng"] as Double)
+                    val item = FavoriteItem(document["name"] as String, document["location"] as String, document["favorite"] as Boolean, document["lat"] as Double, document["lng"] as Double, document["uid"] as String)
                     itemlist.add(item)
                 }
                 adapter.notifyDataSetChanged()
