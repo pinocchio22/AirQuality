@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.setPadding
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.p2glet.airquality.databinding.ActivityFavoriteBinding
 import com.p2glet.airquality.favorite.FavoriteAdapter
@@ -29,6 +30,8 @@ class FavoriteActivity : AppCompatActivity() {
     val itemlist = arrayListOf<FavoriteItem>()
     val adapter = FavoriteAdapter(itemlist)
 
+    var auth = FirebaseAuth.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFavoriteBinding.inflate(layoutInflater)
@@ -41,7 +44,7 @@ class FavoriteActivity : AppCompatActivity() {
 
     @SuppressLint("NotifyDataSetChanged")
     fun init() {
-        db.collection("Favorite_Place")
+        db.collection("Favorite_Place").whereEqualTo("uid", auth.uid)
             .get()
             .addOnSuccessListener { result ->
                 // 성공
