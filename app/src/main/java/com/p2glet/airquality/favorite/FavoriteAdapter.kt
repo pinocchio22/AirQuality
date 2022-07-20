@@ -8,12 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.setPadding
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
-import com.p2glet.airquality.FavoriteActivity
-import com.p2glet.airquality.FavoriteLocation
+import com.p2glet.airquality.favorite.FavoriteActivity
+import com.p2glet.airquality.favorite.FavoriteLocation
 import com.p2glet.airquality.R
 
 /**

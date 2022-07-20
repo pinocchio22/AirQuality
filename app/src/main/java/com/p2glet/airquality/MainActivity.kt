@@ -30,6 +30,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.p2glet.airquality.databinding.ActivityMainBinding
+import com.p2glet.airquality.favorite.FavoriteActivity
 import com.p2glet.airquality.retrofit.AirQualityResponse
 import com.p2glet.airquality.retrofit.AirQualityService
 import com.p2glet.airquality.retrofit.RetrofitConnection

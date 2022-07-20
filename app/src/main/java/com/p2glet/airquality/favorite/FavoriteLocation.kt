@@ -1,4 +1,4 @@
-package com.p2glet.airquality
+package com.p2glet.airquality.favorite
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -19,6 +19,9 @@ import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import com.google.firebase.firestore.FirebaseFirestore
+import com.p2glet.airquality.LocationProvider
+import com.p2glet.airquality.MainActivity
+import com.p2glet.airquality.R
 import com.p2glet.airquality.databinding.ActivityFavoriteLocationBinding
 import com.p2glet.airquality.retrofit.AirQualityResponse
 import com.p2glet.airquality.retrofit.AirQualityService

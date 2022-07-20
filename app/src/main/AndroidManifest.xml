@@ -17,13 +17,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:targetApi="31">
+        <activity
+            android:name=".SplashActivity"
+            android:exported="false" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-        <meta-data android:name="com.facebook.sdk.ClientToken" android:value="@string/facebook_client_token"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/facebook_client_token" />
 
-    <activity
+        <activity
             android:name=".LoginActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -31,12 +38,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".FavoriteLocation"
+            android:name=".favorite.FavoriteLocation"
             android:exported="true" />
         <activity
             android:name=".MapActivity"
             android:exported="false" />
-        <activity android:name=".FavoriteActivity" />
+        <activity android:name=".favorite.FavoriteActivity" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -47,8 +54,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
     </application>
 
 </manifest>

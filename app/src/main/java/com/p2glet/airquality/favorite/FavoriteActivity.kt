@@ -1,4 +1,4 @@
-package com.p2glet.airquality
+package com.p2glet.airquality.favorite
 
 import android.annotation.SuppressLint
 import android.os.Bundle
