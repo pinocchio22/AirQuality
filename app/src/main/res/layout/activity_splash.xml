@@ -13,6 +13,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:src="@drawable/ic_launcher_foreground"/>
+        android:src="@drawable/splash_logo"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
