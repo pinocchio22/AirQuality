@@ -12,9 +12,10 @@ android {
         applicationId "com.p2glet.airquality"
         minSdk 26
         targetSdk 32
-        versionCode 3
+        versionCode 4
         // feat , design , bugfix
-        versionName "2.0.0"
+        // 2: 로그인, 즐겨찾기
+        versionName "2.1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
