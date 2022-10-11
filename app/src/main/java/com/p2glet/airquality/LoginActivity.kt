@@ -1,9 +1,11 @@
 package com.p2glet.airquality
 
 import android.R
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
@@ -34,7 +36,6 @@ class LoginActivity : AppCompatActivity() {
     var googleSignInClient : GoogleSignInClient ?= null
     var GOOGLE_LOGIN_CODE = 9001
     var auth : FirebaseAuth ?= null
-
     var callbackManager : CallbackManager ?= null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,8 +45,11 @@ class LoginActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
 
         // range of Alpha : 0~255
-        binding.backgroundLogo.background.alpha = 150
         binding.iconLogo.drawable.alpha = 180
+
+        binding.emailBtn.setOnClickListener {
+            signinAndSignup()
+        }
 
         var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("33521507868-da69s5m001eis0pmmrifa84v01umoo15.apps.googleusercontent.com")
@@ -71,6 +75,7 @@ class LoginActivity : AppCompatActivity() {
     fun moveMain(user : FirebaseUser?) {
         if (user != null) {
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 
@@ -132,6 +137,52 @@ class LoginActivity : AppCompatActivity() {
             if (result!!.isSuccess) {
                 var account = result.signInAccount
                 firebaseAuthWithGoogle(account)
+            }
+        }
+    }
+
+    fun signinAndSignup() {
+        when {
+            binding.loginEmail.text.toString().isEmpty() -> {
+                Toast.makeText(this, "이메일을 입력하세요", Toast.LENGTH_LONG).show()
+            }
+            binding.loginPsw.text.toString().isEmpty() -> {
+                Toast.makeText(this, "비밀번호를 입력하세요", Toast.LENGTH_LONG).show()
+            }
+            else -> {
+                auth?.createUserWithEmailAndPassword(binding.loginEmail.text.toString(), binding.loginPsw.text.toString())
+                    ?.addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            Log.d("TAG", "1")
+                            //Creating a user account
+                            moveMain(task.result?.user) }
+                        else if (task.exception?.message.isNullOrEmpty()){
+                            Log.d("TAG", "2")
+                            //show the error messagge
+                            Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show() }
+                        else {
+                            Log.d("TAG", "3")
+                            //Login if you have account
+                            signinEmail()
+                        }
+                    }
+            }
+        }
+    }
+
+    fun signinEmail(){
+        auth?.signInWithEmailAndPassword(
+            binding.loginEmail.text.toString(),
+            binding.loginPsw.text.toString()
+        )?.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                //Login
+                Log.d("TAG", "성공", task.exception)
+                moveMain(task.result?.user)
+            }else {
+                //Show the error message
+                Log.d("TAG", "실패", task.exception)
+                Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show()
             }
         }
     }

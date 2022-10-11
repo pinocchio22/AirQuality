@@ -300,7 +300,7 @@ class FavoriteLocation : AppCompatActivity() {
                     builder.setView(mLayout)
 
                     builder.setTitle("즐겨찾기로 저장하시겠습니까?")
-                    builder.setPositiveButton("확인") { dialog, which ->
+                    builder.setPositiveButton("확인") { _, _ ->
                         val data = hashMapOf(
                             "name" to etName.text.toString(),
                             "location" to binding.tvLocationTitle.text as String,
@@ -326,7 +326,7 @@ class FavoriteLocation : AppCompatActivity() {
                     // 즐겨찾기 해제
                         val builder = AlertDialog.Builder(this)
                         builder.setTitle("즐겨찾기를 해제하시겠습니까?")
-                        builder.setPositiveButton("확인") { dialog, which ->
+                        builder.setPositiveButton("확인") { _, _ ->
                             db.collection("Favorite_Place")
                                     //수정
                                 // .document("$latitude+$longitude").update("favorite", false)
@@ -344,7 +344,7 @@ class FavoriteLocation : AppCompatActivity() {
                                     Log.w("MainActivity", "Error getting documents: $exception")
                                 }
                         }
-                        builder.setNegativeButton("취소") { dialog, which ->
+                        builder.setNegativeButton("취소") { _, _ ->
                             finish()
                         }
                         builder.show()

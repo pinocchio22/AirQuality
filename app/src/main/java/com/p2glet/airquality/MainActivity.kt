@@ -424,7 +424,8 @@ class MainActivity : AppCompatActivity() {
                 builder.setView(mLayout)
 
                 builder.setTitle("즐겨찾기로 저장하시겠습니까?")
-                builder.setPositiveButton("확인") { dialog, which ->
+                println(auth.uid)
+                builder.setPositiveButton("확인") { _, _ ->
                     val data = hashMapOf(
                         "name" to etName.text.toString(),
                         "location" to binding.tvLocationTitle.text as String,
@@ -444,7 +445,7 @@ class MainActivity : AppCompatActivity() {
                             Log.w("MainActivity", "Error getting documents: $exception")
                         }
                 }
-                builder.setNegativeButton("취소") { dialog, which ->
+                builder.setNegativeButton("취소") { _, _ ->
                 }
                 builder.show()
             }

@@ -63,11 +63,11 @@ class FavoriteAdapter(val itemList: ArrayList<FavoriteItem>): RecyclerView.Adapt
             builder.setView(mLayout)
 
             builder.setTitle("이름을 수정하시겠습니까?")
-            builder.setPositiveButton("확인") { dialog, which ->
+            builder.setPositiveButton("확인") { _, _ ->
                 db.collection("Favorite_Place")
                     .document("${itemList[position].lat}+${itemList[position].lng}")
                     .update("name", etName.text.toString())
-                    .addOnSuccessListener { success ->
+                    .addOnSuccessListener { _ ->
                         // 성공
                         (it.context as Activity).finish()
                         val intent = Intent(it.context, FavoriteActivity::class.java)
@@ -77,7 +77,7 @@ class FavoriteAdapter(val itemList: ArrayList<FavoriteItem>): RecyclerView.Adapt
                         Log.w("FavoriteAdapter", "Error update documents: $exception")
                     }
             }
-            builder.setNegativeButton("취소") { dialog, which ->
+            builder.setNegativeButton("취소") { _, _ ->
             }
             builder.show()
         }
