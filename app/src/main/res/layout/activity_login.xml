@@ -8,15 +8,6 @@
     tools:context=".LoginActivity">
 
     <ImageView
-        android:id="@+id/background_logo"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitXY"
-        android:background="@drawable/cloud"
-        tools:layout_editor_absoluteX="20dp"
-        tools:layout_editor_absoluteY="30dp" />
-
-    <ImageView
         android:id="@+id/icon_logo"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -31,24 +22,46 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/login_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         app:layout_constraintBottom_toBottomOf="parent">
+
+        <EditText
+            android:id="@+id/login_email"
+            android:layout_width="match_parent"
+            android:hint="이메일을 입력하세요."
+            android:layout_height="40dp"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <EditText
+            android:id="@+id/login_psw"
+            android:layout_width="match_parent"
+            android:hint="비밀번호를 입력하세요."
+            android:inputType="textPassword"
+            android:layout_height="40dp"
+            app:layout_constraintTop_toBottomOf="@id/login_email"/>
+
+        <Button
+            android:id="@+id/email_btn"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="Login"
+            app:layout_constraintTop_toBottomOf="@id/login_psw"/>
 
         <Button
             android:id="@+id/login_facebook"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_margin="30dp"
+            android:layout_margin="10dp"
             android:background="@drawable/btn_signin_facebook"
             android:text="Sign in Facebook"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/email_btn" />
 
 
         <Button
             android:id="@+id/login_google"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_margin="30dp"
+            android:layout_margin="10dp"
             android:background="@drawable/btn_signin_google"
             android:text="Sign in Google"
             app:layout_constraintTop_toBottomOf="@id/login_facebook" />
@@ -74,13 +87,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_end="220dp" />
+        app:layout_constraintGuide_end="300dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="100dp" />
+        app:layout_constraintGuide_begin="80dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
